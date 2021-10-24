@@ -1,4 +1,4 @@
-package com.sofkau.biblioteca.collections;
+package com.sofkau.biblioteca.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,6 +29,6 @@ public class Resource {
     private String typo;
     private String category;
     private Date loanDate;
-    private int onLoan;
+    private boolean onLoan;
 
 }

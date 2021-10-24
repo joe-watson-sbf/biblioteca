@@ -1,11 +1,10 @@
-package com.sofkau.biblioteca.model;
+package com.sofkau.biblioteca.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author JOSEPH WATZSON alias Joe Watson SBF
@@ -19,13 +18,10 @@ import java.util.List;
 @NoArgsConstructor
 public class ResourceDTO {
     private String isbn;
-    private String availabilityId;
     private String title;
     private String author;
-    private String type;
-    private String edition;
-    private Date publicationDate;
-    private String publicacionCountry;
-    private String content;
-    private List<AvailabilityDTO> availabilities;
+    private String typo;
+    private String category;
+    private Date loanDate;
+    private boolean onLoan;
 }

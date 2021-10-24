@@ -18,7 +18,7 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("api/library")
-public class ResourceRouter {
+public class ResourceController {
 
     @Autowired
     private ResourseService service;
@@ -28,9 +28,15 @@ public class ResourceRouter {
         return service.resources();
     }
 
-    @GetMapping("/model")
-    public Mono<ResourceDTO> model(){
-        return Mono.just(new ResourceDTO());
+    @GetMapping("/search")
+    public Flux<ResourceDTO> searchByTypeAndCategory(@RequestParam("type") String type,
+                                                     @RequestParam("category") String category){
+        return service.findByCategoryAndType(type, category);
+    }
+
+    @GetMapping("/search/{id}")
+    public Mono<Object> getLoanedResource(@PathVariable String id){
+        return service.loanedResource(id);
     }
 
     @PostMapping
@@ -41,5 +47,10 @@ public class ResourceRouter {
     @GetMapping("/availability/{id}")
     public Mono<String> getAvailability(@PathVariable String id){
         return service.checkAvailability(id);
+    }
+
+    @PostMapping("/loan/{id}")
+    public Mono<String> loanResource(@PathVariable String id){
+        return service.loanResource(id);
     }
 }
