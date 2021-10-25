@@ -23,6 +23,10 @@ public class ResourseService {
     @Autowired
     private ResourceRepository repository;
 
+
+    /**
+     * Metodo para verificar si un rescurso esta disponible
+     * */
     public Mono<String> checkAvailability(String id){
         return repository.findById(id)
                 .filter(Resource::isOnLoan)
@@ -31,10 +35,13 @@ public class ResourseService {
                 .flatMap(stringMono -> stringMono);
     }
 
+    /**
+     * Metodo para crear rescurso
+     * */
     public Mono<ResourceDTO> createResource(Mono<ResourceDTO> dtoMono){
         return dtoMono.map(resourceDTO -> {
-            resourceDTO.setLoanDate(null);
-            resourceDTO.setOnLoan(false);
+            resourceDTO.setLoanDate(null); // al crear debe estar dispobible
+            resourceDTO.setOnLoan(false); // la fecha del Ultimo prestamo debe ser null
             return resourceDTO;
         })
                 .map(Mapper::dtoToEntity)
@@ -42,16 +49,22 @@ public class ResourseService {
                 .map(Mapper::entityToDTO);
     }
 
+    /**
+     * Metodo para mostrar los recursos
+     * */
     public Flux<ResourceDTO> resources(){
         return repository.findAll().map(Mapper::entityToDTO);
     }
 
+    /**
+     * Metodo para hacer un prestamo de un recurso
+     * */
     public Mono<String> loanResource(String id){
         return repository.findById(id)
                 .filter(resource -> !resource.isOnLoan())
                 .map(resource -> {
-                    resource.setOnLoan(true);
-                    resource.setLoanDate(new Date());
+                    resource.setOnLoan(true); // marcar lo como prestado
+                    resource.setLoanDate(new Date()); // guardar la fecha del prestamo
                     return resource;
                 })
                 .flatMap(repository::save)
@@ -60,15 +73,25 @@ public class ResourseService {
                 .flatMap(stringMono -> stringMono);
     }
 
+    /**
+     * Metodo para consultar un recurso por tipo o categoria
+     * */
     public Flux<ResourceDTO> findByCategoryAndType(String type, String category){
         return repository.findAllByTypoOrCategory(type, category).map(Mapper::entityToDTO);
     }
 
+    /**
+     * Metodo para retornar un recurso que se encuentra prestado
+     * En caso contrario retorna un mensaje texto
+     * */
     public Mono<Object> loanedResource(String id){
         return repository.findById(id)
-                .filter(Resource::isOnLoan)
-                .map(Mapper::entityToDTO)
-                .switchIfEmpty(Mono.empty())
-                .flatMap(resourceDTO -> Mono.just("Recurso no encuentra presatado!"));
+                .map(resource -> {
+                    if(resource.isOnLoan()){
+                        return Mono.just(Mapper.entityToDTO(resource));
+                    }
+                    return Mono.just("Recurso no encuentra presatado!");
+                })
+                .flatMap(mono -> mono);
     }
 }
