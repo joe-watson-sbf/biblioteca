@@ -90,7 +90,7 @@ public class ResourseService {
                     if(resource.isOnLoan()){
                         return Mono.just(Mapper.entityToDTO(resource));
                     }
-                    return Mono.just("Recurso no encuentra presatado!");
+                    return Mono.just("Recurso no se encuentra presatado!");
                 })
                 .flatMap(mono -> mono);
     }
