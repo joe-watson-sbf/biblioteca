@@ -1,0 +1,12 @@
+
+@startuml
+:actor: -left-> (Create Resource)
+:actor: -right-> (Check Resource Availability)
+:actor: -up-> (Loan Resource)
+:actor: -up-> (Get Loaned Resource)
+:actor: -down-> (Find All Resource)
+:actor: -down-> (Find Resource by Type or Category)
+@enduml
+
+
+

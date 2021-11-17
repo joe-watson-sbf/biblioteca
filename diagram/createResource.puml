@@ -1,0 +1,32 @@
+@startuml
+actor Actor
+
+Actor -> Controller: Post Request
+activate Controller
+Controller -> Services: Create Resource
+
+activate Services
+Services -> Validation : validate Resource
+
+activate Validation
+Validation --> Validation-- : error
+
+
+Validation --> Services-- : create resource failed
+
+Services --> Controller : create resource failed
+
+Controller --> Actor : create resource failed
+
+
+activate Validation
+Validation --> Validation-- : Succes
+
+
+Services -> Repository : Insert the resource
+activate Repository
+
+
+Repository --> Actor: Resource Created
+
+@enduml

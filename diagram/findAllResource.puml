@@ -1,0 +1,18 @@
+@startuml
+actor Actor
+
+Actor -> Controller: Get Request
+activate Controller
+
+Controller -> Services: Find All Resource
+
+activate Services
+
+Services -> Repository : Find All Resource
+Repository --> Repository : Succes
+activate Repository
+
+
+Repository --> Actor: Done
+
+@enduml
